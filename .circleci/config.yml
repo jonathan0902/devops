@@ -1,15 +1,15 @@
 # Python CircleCI 2.0 configuration file
 version: 2.1
-jobs:
-  build:
+executors:
+  docker-publisher:
     environment:
       IMAGE_NAME: theholyatom/mircroblog
     docker:
       #- image: circleci/buildpack-deps:stretch
       - image: circleci/python:3.7
-
-    working_directory: ~/repo
-
+jobs:
+  build:
+    executor: docker-publisher
     steps:
       # Step 1: obtain repo from GitHub
       - checkout
@@ -61,12 +61,10 @@ workflows:
   build-master:
     jobs:
       - build:
-          executor: docker-publisher
           filters:
             branches:
               only: master
       - publish-latest:
-          executor: docker-publisher
           requires:
             - build
           filters:
