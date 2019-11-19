@@ -37,10 +37,10 @@ jobs:
             make clean-cov
       - run:
           name: Build Docker image
-          command: docker build -t $IMAGE_NAME:latest .
+          command: docker build -t theholyatom/mircroblog:latest .
       - run:
           name: Archive Docker image
-          command: docker save -o image.tar $IMAGE_NAME
+          command: docker save -o image.tar theholyatom/mircroblog
       - persist_to_workspace:
           root: .
           paths:
@@ -58,7 +58,7 @@ jobs:
           name: Publish Docker Image to Docker Hub
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push $IMAGE_NAME:latest
+            docker push theholyatom/mircroblog:latest
 workflows:
   version: 2
   build-master:
