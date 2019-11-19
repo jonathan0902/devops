@@ -1,8 +1,11 @@
 # Python CircleCI 2.0 configuration file
-version: 2
+version: 2.1
 jobs:
   build:
+    environment:
+      IMAGE_NAME: theholyatom/mircroblog
     docker:
+      #- image: circleci/buildpack-deps:stretch
       - image: circleci/python:3.7
 
     working_directory: ~/repo
@@ -10,6 +13,7 @@ jobs:
     steps:
       # Step 1: obtain repo from GitHub
       - checkout
+      - setup_remote_docker
       # Step 2: create virtual env and install dependencies
       - run:
           name: install dependencies
@@ -27,4 +31,25 @@ jobs:
             pip install coverage
             pip install -r requirements.txt
             make install
-            make test
+            validate exec-tests
+            python3 -m coverage report  --rcfile=.coveragerc
+            make clean-cov
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $IMAGE_NAME:latest
+workflows:
+  version: 2
+  build-master:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: master
+      - publish-latest:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
