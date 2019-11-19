@@ -90,7 +90,7 @@ workflows:
           filters:
             branches:
               only: master
-build-tags:
+  build-tags:
     jobs:
       - build:
           filters:
