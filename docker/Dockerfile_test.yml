@@ -1,0 +1,29 @@
+FROM python:3.6-alpine
+
+RUN adduser -D microblog
+
+WORKDIR /home/microblog
+
+COPY requirements.txt requirements.txt
+COPY requirements requirements
+COPY Makefile Makefile
+COPY .pylintrc .pylintrc
+COPY .coveragerc .coveragerc
+COPY pytest.ini pytest.ini
+COPY tests tests
+RUN python -m venv venv
+RUN apk update && apk add make && apk add gcc && apk add libffi-dev && apk add openssl-dev && apk add python3-dev && apk add g++
+RUN venv/bin/pip install -r requirements/test.txt
+
+COPY app app
+COPY migrations migrations
+COPY microblog.py app/config.py boot.sh ./
+RUN chmod +x boot.sh
+
+ENV FLASK_APP microblog.py
+
+RUN chown -R microblog:microblog ./
+USER microblog
+
+EXPOSE 5000
+ENTRYPOINT . venv/bin/activate %% make install-dev && python3 -m coverage report  --rcfile=.coveragerc && make clean-cov
