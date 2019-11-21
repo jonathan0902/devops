@@ -26,4 +26,4 @@ RUN chown -R microblog:microblog ./
 USER microblog
 
 EXPOSE 5000
-ENTRYPOINT . venv/bin/activate %% make install-dev && python3 -m coverage report  --rcfile=.coveragerc && make clean-cov
+ENTRYPOINT . venv/bin/activate %% make install-dev && make exec-tests && make validate && python3 -m coverage report  --rcfile=.coveragerc && make clean-cov
