@@ -61,7 +61,7 @@ jobs:
       - run:
           name: Run Ansible
           command: |
-            . venv/bin/activate
+            . ../venv/bin/activate
             ansible-playbook gather_aws_instances.yml appServer.yml
           working_directory: ansible
         
