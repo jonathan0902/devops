@@ -112,11 +112,11 @@
 -     name: Get docker image
       command: docker pull theholyatom/mircroblog
 
--     name: Start Application for server
-      command: sudo docker run --name appServer -d -p 8000:5000 --rm -e SECRET_KEY=my-secret-key \
-            --link mysql:dbserver \
-            -e DATABASE_URL="mysql+pymysql://microblog:{{ mysql_password }}@{{ groups.database[0] }}:3306/microblog" \
-            theholyatom/mircroblog
+# -     name: Start Application for server
+#       command: sudo docker run --name appServer -d -p 8000:5000 --rm -e SECRET_KEY=my-secret-key \
+#             --link mysql:dbserver \
+#             -e DATABASE_URL="mysql+pymysql://microblog:{{ mysql_password }}@{{ groups.database[0] }}:3306/microblog" \
+#             theholyatom/mircroblog
 
 -     name: Start Application for server
       docker_container:
