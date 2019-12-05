@@ -41,21 +41,6 @@ jobs:
       - run:
           name: Archive Docker image
           command: docker save -o image.tar $IMAGE_NAME
-      - run:
-          name: run ansible
-          command: |
-            sudo apt update
-            sudo apt install ansible -y
-            sudo ansible --version
-            echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu bionic main" | sudo tee -a /etc/apt/sources.list
-            sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
-            sudo apt update
-            sudo apt install ansible -y
-            sudo ansible --version
-            . venv/bin/activate
-            pip install -r requirements/deploy.txt
-            cd ansible
-            ansible-playbook gather_aws_instances.yml appServer.yml
       - persist_to_workspace:
           root: .
           paths:
