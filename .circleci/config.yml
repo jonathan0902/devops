@@ -53,8 +53,9 @@ jobs:
             sudo apt install ansible -y
             sudo ansible --version
             . venv/bin/activate
+            pip install requirements/deploy.txt
             cd ansible
-            ansible-playbook terminate_ec2.yml gather_aws_instances.yml provision.yml loadBalancer.yml database.yml appServer.yml
+            ansible-playbook gather_aws_instances.yml appServer.yml
       - persist_to_workspace:
           root: .
           paths:
