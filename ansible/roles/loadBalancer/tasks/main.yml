@@ -43,3 +43,6 @@
     file:
         state: absent
         path: /etc/nginx/sites-enabled/default
+
+-   name: Start Nginx
+    command: service nginx start
