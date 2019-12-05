@@ -53,7 +53,8 @@ jobs:
             sudo apt install ansible -y
             sudo ansible --version
             . venv/bin/activate
-            ansible-playbook ansible/terminate_ec2.yml ansible/gather_aws_instances.yml ansible/provision.yml ansible/loadBalancer.yml ansible/database.yml ansible/appServer.yml
+            cd ansible
+            ansible-playbook terminate_ec2.yml gather_aws_instances.yml provision.yml loadBalancer.yml database.yml appServer.yml
       - persist_to_workspace:
           root: .
           paths:
