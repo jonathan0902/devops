@@ -15,15 +15,16 @@ jobs:
       - checkout
       - setup_remote_docker
       # Step 2: create virtual env and install dependencies
-      - run: echo "source /path/to/virtualenv/bin/activate" >> $BASH_ENV
       - run:
           name: install dependencies
           command: |
             python3 -m venv venv
+            . venv/bin/activate
             pip install -r requirements.txt
       - run:
           name: run tests
           command: |
+          . venv/bin/activate
             pip install pylint
             pip install py
             pip install pytest
@@ -69,6 +70,7 @@ jobs:
             sudo apt update
             sudo apt install ansible -y
             sudo ansible --version
+            . venv/bin/activate
             make add-ssh
             ansible-playbook ansible/terminate_ec2.yml ansible/gather_aws_instances.yml ansible/provision.yml ansible/loadBalancer.yml ansible/database.yml ansible/appServer.yml
   publish-tag:
