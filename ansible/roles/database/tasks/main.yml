@@ -1,0 +1,119 @@
+---
+# - name: Set root password
+#   user:
+#       name: root
+#       password: "{{ root_password }}"
+
+# - name: Update apt-cache and upgrade
+#   apt:
+#       force_apt_get: yes
+#       update_cache: "True"
+#       cache_valid_time: 3600
+#       upgrade: yes
+
+# - name: Install package
+#   apt:
+#       force_apt_get: yes
+#       name: "{{ packages }}"
+
+# - name: Copy unattended upgrades 10 settings
+#   copy:
+#       src: files/apt_periodic
+#       dest: /etc/apt/apt.conf.d/10periodic
+
+# - name: Copy unattended upgrades 50 settings
+#   copy:
+#       src: files/apt_periodic_50
+#       dest: /etc/apt/apt.conf.d/50unattended-upgrades
+
+# This playbook contains docker actions that will be run on "remote" host.
+ 
+# sudo apt-get install *
+- name: Install docker packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+  tags:
+    - docker
+ 
+# curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+- name: Add Docker s official GPG key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  tags:
+    - docker
+ 
+# sudo apt-key fingerprint 0EBFCD88
+- name: Verify that we have the key with the fingerprint
+  apt_key:
+    id: 0EBFCD88
+    state: present
+  tags:
+    - docker
+ 
+# sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
+- name: Set up the stable repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+    state: present
+    update_cache: yes
+  tags:
+    - docker
+ 
+# sudo apt-get update
+- name: Update apt packages
+  apt:
+    update_cache: yes
+  tags:
+    - docker
+ 
+# sudo apt-get install docker-ce=18.03.*
+- name: Install docker
+  apt:
+    name: docker-ce=18.03.*
+    state: present
+    update_cache: yes
+  tags:
+    - docker
+ 
+# sudo groupadd docker
+- name: Create "docker" group
+  group:
+    name: "{{ docker_group }}"
+    state: present
+  tags:
+    - docker
+ 
+# sudo usermod -aG docker ubuntu
+- name: Add remote "deploy" user to "docker" group
+  user:
+    name: "{{ server_user }}"
+    group: "{{ docker_group }}"
+    append: yes
+  tags:
+    - docker
+ 
+# sudo apt-get install docker-compose=1.8.*
+- name: Install docker-compose
+  apt:
+    name: docker-compose=1.8.*
+    state: present
+    update_cache: yes
+  tags:
+    - docker
+
+-     name: Get docker image
+      command: docker pull theholyatom/mircroblog
+
+-     name: Start MYSQL Server
+      command: sudo docker run --name mysql --rm -d -e MYSQL_RANDOM_ROOT_PASSWORD=yes -p "3306:3306"\
+            -e MYSQL_DATABASE=microblog -e MYSQL_USER=microblog \
+            -e MYSQL_PASSWORD="test1234" \
+            mysql/mysql-server:5.7

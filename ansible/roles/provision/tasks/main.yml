@@ -9,7 +9,7 @@
         region: "{{ region }}"
         keypair: "{{ keypair }}"
         assign_public_ip: yes
-        vpc_subnet_id: "<subnet-id>"
+        vpc_subnet_id: "subnet-3f3c3d11"
         count: 1
         state: present
     loop: "{{ instances }}"
@@ -28,9 +28,6 @@
 
 -   name: Set domain to ip in AWS (route53)
     route53:
-        aws_access_key: "{{ aws_access_key }}"
-        aws_secret_key: "{{ aws_secret_key }}"
-        security_token: "{{ aws_session_token }}"
         state: present
         zone: "{{ domain_name }}"
         record: "{{ item }}"

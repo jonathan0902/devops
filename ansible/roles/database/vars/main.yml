@@ -1,0 +1,13 @@
+---
+packages:
+  - fail2ban
+  - tmux
+  - git
+  - unattended-upgrades
+
+docker-packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg2
+  - software-properties-common

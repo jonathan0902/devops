@@ -1,0 +1,19 @@
+---
+root_password: $6$1kjBBn4Oqy$0Tj3QvsJ8tolR7WSYiciG2s52yfCD50F8XCji06UdHcsvclxFO5uqtI91ag9FxFY80yhsk1cPeEpaRrPCxMiv.
+
+server_user: deploy
+server_user_pass: $6$nlrE0Zw.vDOaVD$Hc40O5aW.Q6MZFvujHUndQSl5ELv0AovegioIrxkNQGkEZ7DQBU6cy7ZttN5qvSXrJldZ1vBzRWe/KRVGfNk3.
+server_user_groups:
+  - sudo
+
+pub_ssh_key_location:
+  - /home/jonathan/Downloads/aws.pub
+
+docker_group: docker
+
+repositories: theholyatom/mircroblog
+mysql_password: $6$4LRVHuJD$V/L9R7QjEwZKdbIchdZcCaCpIypQM7nkBrYEkXE1LJXn0oO4NMUmsaKNBt8dydtQePFKZk5Vi08ptpzrK47eO/
+
+domain_name: jhellberg.me
+lb_method: least_conn
+admin_email: jonathanh98@live.se
