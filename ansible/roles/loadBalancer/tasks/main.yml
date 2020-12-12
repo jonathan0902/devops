@@ -1,48 +1,127 @@
 ---
 
--   name: Install packages
-    apt:
-        name: 
-          - nginx
-          - python-certbot-nginx
-        state: present
+# -   name: Install packages
+#     apt:
+#         name: 
+#           - nginx
+#           - python-certbot-nginx
+#         state: present
 
--   name: Copy Nginx File to Server
-    template:
-      dest: /etc/nginx/nginx.conf
-      src: ../files/nginx.conf.j2
+# -   name: Copy Nginx File to Server
+#     template:
+#       dest: /etc/nginx/nginx.conf
+#       src: ../files/nginx.conf.j2
 
--   name: Link Nginx Files
-    file:
-      path: /etc/nginx/sites-enabled/load-balancer.conf
-      src: /etc/nginx/sites-available/load-balancer.conf
-      state: link
-      force: yes
+# -   name: Link Nginx Files
+#     file:
+#       path: /etc/nginx/sites-enabled/load-balancer.conf
+#       src: /etc/nginx/sites-available/load-balancer.conf
+#       state: link
+#       force: yes
 
 -   name: Copy Load Balancer to Server
     template:
       dest: /etc/nginx/sites-available/load-balancer.conf
       src: ../files/load-balancer.conf.j2
 
--   name: Check if certificate already exists.
-    stat:
-        path: /etc/letsencrypt/live/{{ domain_name }}/cert.pem
-    register: letsencrypt_cert
+# -   name: Check if certificate already exists.
+#     stat:
+#         path: /etc/letsencrypt/live/{{ domain_name }}/cert.pem
+#     register: letsencrypt_cert
 
--   debug: msg="{{ letsencrypt_cert.stat.exists }}"
+# -   debug: msg="{{ letsencrypt_cert.stat.exists }}"
 
--   name: Stop services to allow certbot to generate a cert.
-    command: service nginx stop
-    when: not letsencrypt_cert.stat.exists
+# -   name: Stop services to allow certbot to generate a cert.
+#     command: service nginx stop
+#     when: not letsencrypt_cert.stat.exists
 
--   name: Generate new certificate if one doesn't exist.
-    shell: "certbot certonly --standalone --noninteractive --expand --agree-tos --email {{ admin_email }} -d {{ domain_name }} -d www.{{ domain_name }}"
-    when: not letsencrypt_cert.stat.exists
+# -   name: Generate new certificate if one doesn't exist.
+#     shell: "certbot certonly --standalone --noninteractive --expand --agree-tos --email {{ admin_email }} -d {{ domain_name }} -d www.{{ domain_name }}"
+#     when: not letsencrypt_cert.stat.exists
 
--   name: Remove default conf
-    file:
-        state: absent
-        path: /etc/nginx/sites-enabled/default
+# -   name: Remove default conf
+#     file:
+#         state: absent
+#         path: /etc/nginx/sites-enabled/default
 
--   name: Start Nginx
-    command: service nginx start
+# -   name: Start Nginx
+#     command: service nginx start
+
+# -   name: Activate with-http_stub_status_module
+#     command: sudo nginx -V 2>&1 | grep -o with-http_stub_status_module
+
+# # sudo apt-get install *
+# - name: Install docker packages
+#   apt:
+#     name: "{{ item }}"
+#     state: present
+#     update_cache: yes
+#   with_items:
+#     - apt-transport-https
+#     - ca-certificates
+#     - curl
+#     - software-properties-common
+#   tags:
+#     - docker
+ 
+# # curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+# - name: Add Docker s official GPG key
+#   apt_key:
+#     url: https://download.docker.com/linux/ubuntu/gpg
+#     state: present
+#   tags:
+#     - docker
+ 
+# # sudo apt-key fingerprint 0EBFCD88
+# - name: Verify that we have the key with the fingerprint
+#   apt_key:
+#     id: 0EBFCD88
+#     state: present
+#   tags:
+#     - docker
+ 
+# # sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
+# - name: Set up the stable repository
+#   apt_repository:
+#     repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+#     state: present
+#     update_cache: yes
+#   tags:
+#     - docker
+ 
+# # sudo apt-get update
+# - name: Update apt packages
+#   apt:
+#     update_cache: yes
+#   tags:
+#     - docker
+ 
+# # sudo apt-get install docker-ce=18.03.*
+# - name: Install docker
+#   apt:
+#     name: docker-ce=18.03.*
+#     state: present
+#     update_cache: yes
+#   tags:
+#     - docker
+ 
+# # sudo groupadd docker
+# - name: Create "docker" group
+#   group:
+#     name: "{{ docker_group }}"
+#     state: present
+#   tags:
+#     - docker
+ 
+# # sudo usermod -aG docker ubuntu
+# - name: Add remote "deploy" user to "docker" group
+#   user:
+#     name: "{{ server_user }}"
+#     group: "{{ docker_group }}"
+#     append: yes
+#   tags:
+#     - docker
+
+-   name: Docker run
+    command: sudo docker run -p 9113:9113 -d nginx/nginx-prometheus-exporter:0.4.2 -nginx.scrape-uri=https://jhellberg.me/metrics -nginx.retries=10 -nginx.ssl-verify=false -web.telemetry-path=/prometheus
+             

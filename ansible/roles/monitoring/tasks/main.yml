@@ -1,0 +1,158 @@
+---
+
+# -   name: Wget node_exporter
+#     get_url:
+#       url="{{ node_exporter }}"
+#       dest="/home/"
+
+# - name: Unarchive Node Exporter
+#   command: tar xvzf /home/node_exporter-0.18.1.linux-amd64.tar.gz
+
+# - name: Sudo useradd nodeexporter
+#   command: sudo useradd -rs /bin/false node_exporter
+
+# - name: Copy node exporter
+#   command: sudo cp /home/node_exporter-0.18.1.linux-amd64/node_exporter /usr/local/bin
+
+# - name: Give premissons
+#   command: sudo chown node_exporter:node_exporter /usr/local/bin/node_exporter
+
+# - name: Ansible create file if it doesn't exist example
+#   file:
+#     path: "/etc/systemd/system/node_exporter.service"
+#     state: touch
+
+# -   name: Copy node_exporter File to Server
+#     template:
+#       dest: /etc/systemd/system/node_exporter.service
+#       src: ../files/node_exporter.service.js1
+
+# - name: Reload daemon
+#   command: sudo systemctl daemon-reload
+
+# - name: Start node_exporter
+#   command: sudo systemctl daemon-reload
+
+# - name: Enable node_exporter
+#   command: sudo systemctl enable node_exporter
+
+# -   name: Wget Prometheus
+#     get_url:
+#       url="{{ prometheus }}"
+#       dest="/home/"
+
+# -   name: Unarchive Node Exporter
+#     command: tar xvzf /home/prometheus-2.10.0.linux-amd64.tar.gz
+
+# -   name: Copy Prometheus File Settings
+#     template:
+#       dest: prometheus-2.10.0.linux-amd64/prometheus.yml
+#       src: ../files/prometheus.yml.js2
+
+# -   name: Start prometheus
+#     shell:
+#       cmd: sudo nohup ./prometheus > prometheus.log 2>&1 &
+#       chdir: prometheus-2.10.0.linux-amd64
+
+# - name: Update system
+#   command: sudo apt-get update -y
+
+# - name: Install fontconfig-config
+#   command: sudo apt-get install fontconfig-config
+
+# - name: Install libfontconfig1
+#   command: sudo apt-get install -y adduser libfontconfig1
+
+# -   name: Wget grafana
+#     get_url:
+#       url="{{ grafana }}"
+#       dest="/home/admin/"
+
+# - name: Extract the .deb Grafanar file
+#   command: sudo dpkg -i grafana_6.2.4_amd64.deb
+
+# - name: Start grafana server on PORT :3000
+#   command: sudo systemctl status grafana-server
+
+# - name: Install docker packages
+#   apt:
+#     name: "{{ item }}"
+#     state: present
+#     update_cache: yes
+#   with_items:
+#     - apt-transport-https
+#     - ca-certificates
+#     - curl
+#     - software-properties-common
+#   tags:
+#     - docker
+ 
+# # curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+# - name: Add Docker s official GPG key
+#   apt_key:
+#     url: https://download.docker.com/linux/ubuntu/gpg
+#     state: present
+#   tags:
+#     - docker
+ 
+# # sudo apt-key fingerprint 0EBFCD88
+# - name: Verify that we have the key with the fingerprint
+#   apt_key:
+#     id: 0EBFCD88
+#     state: present
+#   tags:
+#     - docker
+ 
+# # sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
+# - name: Set up the stable repository
+#   apt_repository:
+#     repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+#     state: present
+#     update_cache: yes
+#   tags:
+#     - docker
+ 
+# # sudo apt-get update
+# - name: Update apt packages
+#   apt:
+#     update_cache: yes
+#   tags:
+#     - docker
+ 
+# # sudo apt-get install docker-ce=18.03.*
+# - name: Install docker
+#   apt:
+#     name: docker-ce=18.03.*
+#     state: present
+#     update_cache: yes
+#   tags:
+#     - docker
+ 
+# # sudo groupadd docker
+# - name: Create "docker" group
+#   group:
+#     name: "{{ docker_group }}"
+#     state: present
+#   tags:
+#     - docker
+ 
+# # sudo usermod -aG docker ubuntu
+# - name: Add remote "deploy" user to "docker" group
+#   user:
+#     name: "{{ server_user }}"
+#     group: "{{ docker_group }}"
+#     append: yes
+#   tags:
+#     - docker
+ 
+# # sudo apt-get install docker-compose=1.8.*
+# - name: Install docker-compose
+#   apt:
+#     name: docker-compose=1.8.*
+#     state: present
+#     update_cache: yes
+#   tags:
+#     - docker
+
+- name: Pull docker prom/statsd-exporter
+  command: docker pull prom/statsd-exporter

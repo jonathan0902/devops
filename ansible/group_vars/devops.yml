@@ -17,3 +17,7 @@ mysql_password: $6$4LRVHuJD$V/L9R7QjEwZKdbIchdZcCaCpIypQM7nkBrYEkXE1LJXn0oO4NMUm
 domain_name: jhellberg.me
 lb_method: least_conn
 admin_email: jonathanh98@live.se
+
+node_exporter: https://github.com/prometheus/node_exporter/releases/download/v0.18.1/node_exporter-0.18.1.linux-amd64.tar.gz
+prometheus: https://github.com/prometheus/prometheus/releases/download/v2.10.0/prometheus-2.10.0.linux-amd64.tar.gz
+grafana: https://dl.grafana.com/oss/release/grafana_6.2.4_amd64.deb
